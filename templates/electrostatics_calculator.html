@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electrostatics Calculator</title>
+    <link rel="stylesheet" href="../static/style_cal.css">
+</head>
+
+<body>
+    <header>
+        <div class="logo">Electrostatics<span>Calculator</span></div>
+        <input type="checkbox" id="nav-toggle">
+        <label for="nav-toggle">
+            <span></span>
+        </label>
+        <div class="navbar">
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+            <a href="/contacts">Contact</a>
+        </div>
+    </header>
+
+    <section class="home">
+        <h1></h1>
+        <form action="/result" method="post" id="calculatorForm">
+            <div id="parameters">
+                    <div class="parameter">
+                        <label for="param_name_1">Choose parameter:</label>
+                        <select id="param_name_1" name="param_name" class="param_name" required>
+                            <option value="">Select Parameter</option>
+                            {% for key, description in available_parameters.items() %}
+                            <option value="{{ key }}">{{ description }}</option>
+                            {% endfor %}
+                        </select>
+                        <label for="param_value_1">Enter parameter value:</label>
+                        <input type="text" id="param_value_1" name="param_value" class="param_value" required>
+                    </div>
+                </div>
+                <button type="button" onclick="addParameter()">Add Parameter</button><br><br>
+                    <label for="formula">Choose formula:</label>
+                    <select id="formula" name="formula" required>
+                    <option value="">Select Formula</option>
+                    {% for key, description in available_formulas.items() %}
+                    <option value="{{ key }}">{{ description }}</option>
+                    {% endfor %}
+            </select><br><br>
+            <button type="submit">Calculate</button>
+        </form>
+    </section>
+
+    <script>
+        var paramCounter = 1;
+
+        function addParameter() {
+            paramCounter++;
+            var parametersDiv = document.getElementById('parameters');
+            var newParameterDiv = document.createElement('div');
+            newParameterDiv.className = 'parameter';
+            newParameterDiv.innerHTML = `
+                <label for="param_name_${paramCounter}">Choose parameter:</label>
+                <select id="param_name_${paramCounter}" name="param_name_${paramCounter}" class="param_name" required>
+                    <option value="">Select Parameter</option>
+                    {% for key, description in available_parameters.items() %}
+                    <option value="{{ key }}">{{ description }}</option>
+                    {% endfor %}
+                </select>
+                <label for="param_value_${paramCounter}">Enter parameter value:</label>
+                <input type="text" id="param_value_${paramCounter}" name="param_value_${paramCounter}" class="param_value" required>
+            `;
+            parametersDiv.appendChild(newParameterDiv);
+        }
+    </script>
+
+    <script>
+    function calculateResult() {
+        var formData = new FormData(document.getElementById('calculatorForm'));
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/result', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                var result = xhr.responseText;
+                // Отобразить результат на странице
+                document.getElementById('result').innerHTML = result;
+            } else {
+                console.error('Ошибка при получении данных: ' + xhr.statusText);
+            }
+        };
+        xhr.send(new URLSearchParams(formData).toString());
+    }
+    </script>
+
+
+</body>
+
+</html>

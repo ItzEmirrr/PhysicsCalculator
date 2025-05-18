@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result</title>
+    <link rel="stylesheet" href="../static/style_res.css">
+    <script src="https://kit.fontawesome.com/bfec730d56.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    {% if selected_formula == 'coulomb_force' %}
+    <h2>Calculated Force:</h2>
+    <p>{{ result }}</p>
+    {% elif selected_formula == 'electric_field' %}
+    <h2>Calculated Electric Field:</h2>
+    <p>{{ result }}</p>
+    {% elif selected_formula == 'voltage' %}
+    <h2>Voltage:</h2>
+    <p>{{ result }}</p>
+    {% endif %}
+    <a href="/electrostatics_calculator">Calculate again</a>
+</body>
+</html>
